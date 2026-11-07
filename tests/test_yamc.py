@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import importlib
 import runpy
+import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
@@ -171,3 +173,12 @@ class TestEntrypoints:
         ):
             runpy.run_module("yamc.__main__", run_name="__main__")
             mock_main.assert_called_once()
+
+    def test_module_import(self) -> None:
+        """__main__.py がインポート時に main を呼ばないことを検証。"""
+        with patch("yamc.main") as mock_main:
+            if "yamc.__main__" in sys.modules:
+                importlib.reload(sys.modules["yamc.__main__"])
+            else:
+                importlib.import_module("yamc.__main__")
+            mock_main.assert_not_called()
