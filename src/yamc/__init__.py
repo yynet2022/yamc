@@ -152,10 +152,10 @@ def convert(
         ),
     ] = None,
 ) -> None:
-    """Markdown を HTML に変換する。
+    """Convert Markdown to HTML with selectable backend.
 
-    入力ファイルが省略され、かつ標準入力にデータがパイプされている場合は
-    標準入力から読み取ります。
+    If input_file is omitted and data is piped to stdin, yamc reads
+    the Markdown content directly from standard input.
     """
     del version  # コールバックで処理されるため未使用
 

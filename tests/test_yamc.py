@@ -55,11 +55,19 @@ class TestCli:
     """yamc CLI コマンドのテストクラス。"""
 
     def test_help(self) -> None:
-        """--help オプションでヘルプメッセージが表示されることを検証する。"""
+        """--help オプションで英語ヘルプが表示されることを検証する。"""
         result = runner.invoke(app, ["--help"], prog_name="yamc")
         assert result.exit_code == 0
         assert "Usage: yamc [OPTIONS] [input_file]" in result.stdout
+        assert "Convert Markdown to HTML with selectable backend." in (
+            result.stdout
+        )
         assert "--help" in result.stdout
+        # ヘルプ出力全体に日本語（かな・漢字）が含まれないことを検証
+        assert not any(
+            "\u3040" <= char <= "\u30ff" or "\u4e00" <= char <= "\u9fff"
+            for char in result.stdout
+        )
 
     @pytest.mark.parametrize("flag", ["--version", "-V"])
     def test_version(self, flag: str) -> None:
